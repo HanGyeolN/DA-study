@@ -97,16 +97,57 @@
    * CLI에서는 현재 상태를 알기 위해 반드시 명령어를 통해 확인해야한다.
    * 커밋 할 목록에 담겨 있는지, untracked 인지, 커밋 할 내역이 없는지 등 다앙한 정보를 알려준다.
 
-7. 
+
+
+## 원격 저장소 활용하기
 
 
 
+1. 원격 저장소(remote repository) 등록하기
+
+   ```bash
+   $ git remote add origin ___경로___
+   ```
+
+   * 원격저장소를 등록(add)한다. origin 이라는 이름으로 경로를
+
+   * 최초 한번만 등록하면 된다.
+
+   * 원격 저장소가 확인된다.
+
+     ```bash
+     $ git remote -v
+     origin  https://github.com/HanGyeolN/TIL.git (fetch)
+     origin  https://github.com/HanGyeolN/TIL.git (push)
+     ```
+
+2.  원격 저장소에 올리기(push)
+
+   ```bash
+   $ git push origin master
+   ```
+
+   * git ! 올려줘(push) `origin` 이라는 이름의 원격저장소에 master 로.
 
 
 
+## 원격 저장소 복제(Clone) 하기
+
+```bash
+$ git clone ____경로____
+```
+
+* 다운 받기를 원하는 폴더에서 `git bash`를 열고 위의 명령어를 입력한다.
+* 경로는 `github`에서 우측에 있는 초록색 버튼을 누르면 나타난다.
 
 
 
+나갈 때 git push origin master 했냐?
+
+올 때 git pull origin master 했냐?
 
 
+
+* clone / pull 차이 : pull은 꼬일 수 있어서 clone으로 하는게 제일 깔끔하다. 
+* 
 
