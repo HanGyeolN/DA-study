@@ -1,0 +1,91 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+
+library(forecast)
+
+USunemp<-read.csv("Data/USunemp.csv")
+```
+
+
+```{r}
+
+# Time Series 
+# chapter 01. 시계열 소개 - 데이터 속성
+# ts함수 옵션 중 frequency 옵션이 제일 중요하다.
+# 보통 외부 csv 파일 -> dataframe -> ts 의 단계를 거친다.
+
+# 데이터 type 확인.
+class(USunemp) # "data.farame" 형식이다. 
+
+# ts type으로 변환
+ts(USunemp)
+ts(USunemp, frequency = 12) # 월별 시계열로 변환 
+
+USunemp <- ts(USunemp) 
+
+
+class(USunemp)
+
+```
+
+
+```{r}
+
+# Chapter01-04 시계열 그래프
+library(ggfortify)
+library(forecast)
+library(ggplot2)
+
+```
+
+
+```{r}
+class(AirPassengers)
+
+plot(AirPassengers)
+
+AP <- AirPassengers
+AP
+
+# ts 데이터 함수 
+start(AP);end(AP);frequency(AP) #시작과 끝, 주기를 알려준다.
+
+plot(AP, ylab="Number of Passangers", xlab="Time")
+
+# aggregate는 데이터의 특정 컬럼을 기준으로 통계량을 구해주는 함수 입니다.
+aggregate(AP)
+
+# 두개의 그래프가 하나의 화면에 나오도록 하고싶다.
+par(mfrow=c(2,1)) # row 2개 col 1개 
+plot(aggregate(AP), ylab = "Passangers") # 월별로 sum을 한다.
+boxplot(AP-cycle(AP), ylab = "Passangers")
+
+
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
