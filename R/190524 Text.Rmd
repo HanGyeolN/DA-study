@@ -8,28 +8,25 @@ library(tm)
 
 ```
 
+### 공백 처리하기
 ```{r}
+#각각 " ", "  ", "\t"으로 구분된다.
 mytext<-c("software environment",
   "software  environment",
   "software\tenvironment")
 mytext
 
-mytext
-
-# sapply(입력: 리스트, 출력: 벡터)
-# lapply(I: list, O: list)
-
 mt<-str_split(mytext," ")
 mt
 
+# sapply(입력: 리스트, 출력: 벡터)
+# lapply(I: list, O: list)
 lapply(mt, str_length)
-
 sapply(mt, str_length)
 
 
 ```
 
-#### 공백 처리
 ```{r}
 # "hi         hello" -> "hi hello"
 str_replace_all(mytext,"[[:space:]]{1,}", " ")->mt2
@@ -40,6 +37,7 @@ sapply(mt2, length)
 sapply(mt2, str_length)
 ```
 
+### extract_all에 boundary 옵션으로 특수문자 처리
 ```{r}
 
 mytext<-"The 45th President of the United States, Donald Trump, states that he knows how to play trump with the former president"
@@ -61,7 +59,7 @@ tolower(myword)
 ```
 
 
-
+### 숫자 처리하기
 ```{r}
 
 # 구분 될 필요가 있는 숫자
@@ -87,7 +85,7 @@ mytext3
 
 ```
 
-
+### 특수문자, 불용어 처리하기 
 ```{r}
 
 # 구분 될 필요가 있는 특수문자 
@@ -114,15 +112,7 @@ mystopwords<- "(\\ba )|(\\ban )|(\\bthe )"
 mytext<-c("she is an actor", "She is the actor")
 str_replace_all(mytext, mystopwords,"")
 
-# 4. 
-  
-
-
-```
-
-
-#### 정의되어있는 불용어 리스트
-```{r}
+# 4. 정의되어있는 불용어 사용하기
 # stopwords("en") # 짧은 불용어
 # stopwords("SMART") # 긴 불용어
 
@@ -131,9 +121,10 @@ str_replace_all(mytext, mystopwords,"")
 # ~s ~es -> 동일화
 
 
-
 ```
 
+
+### 불용어 처리 함수
 ```{r}
 mystemmer.func<-function(mytext){
   mytext<-str_replace_all(mytext, "(\\bam )|(\\bare )|(\\bas )|(\\bwas )|(\\bwere )|(\\bbe)", "be ")
@@ -148,7 +139,7 @@ mystemmer.func(test)
 ```
 
 
-#### 
+## n-gram
 ```{r}
 # n-gram : 1-gram(의미없음)
 #          2-gram(bi-gram), 3-gram(tri-gram)
@@ -198,6 +189,9 @@ VCorpus(DirSource(my.text.location))->mypaper
 class(mypaper)
 summary(mypaper)
 
+mypaper[[1]]$meta
+
+mypaper[[2]]$meta
 
 
 ```
