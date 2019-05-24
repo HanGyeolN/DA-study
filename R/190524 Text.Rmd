@@ -1,0 +1,209 @@
+---
+title: "R Notebook"
+output: rmarkdown::github_document
+---
+```{r}
+library(stringr)
+library(tm)
+
+```
+
+```{r}
+mytext<-c("software environment",
+  "software  environment",
+  "software\tenvironment")
+mytext
+
+mytext
+
+# sapply(입력: 리스트, 출력: 벡터)
+# lapply(I: list, O: list)
+
+mt<-str_split(mytext," ")
+mt
+
+lapply(mt, str_length)
+
+sapply(mt, str_length)
+
+
+```
+
+#### 공백 처리
+```{r}
+# "hi         hello" -> "hi hello"
+str_replace_all(mytext,"[[:space:]]{1,}", " ")->mt2
+
+ 
+
+sapply(mt2, length)
+sapply(mt2, str_length)
+```
+
+```{r}
+
+mytext<-"The 45th President of the United States, Donald Trump, states that he knows how to play trump with the former president"
+
+str_split(mytext, " ") 
+#,가 안없어짐
+
+# 고급함수
+str_extract_all(mytext, boundary("word"))
+#,가 없어짐
+
+myword<-unlist(str_extract_all(mytext, boundary("word")))
+myword
+
+myword<-str_replace(myword,"Trump", "Trump_unique_")
+myword<-str_replace(myword,"States", "States_unique_")
+tolower(myword)
+
+```
+
+
+
+```{r}
+
+# 구분 될 필요가 있는 숫자
+
+mytext<-c("He is one of statisticians agreeing that R is the No. 1 statistical software.","He is one of statisticians agreeing that R is the No. one statistical software.")
+str_split(mytext," ")
+
+str_replace_all(mytext, "[[:digit:]]{1,}[[:space:]]{1,}", "") -> mytext2
+str_split(mytext2, " ")->mytext2
+mytext2
+str_c(mytext2[[1]], collapse = " ")
+str_c(mytext2[[2]], collapse = " ")
+```
+
+
+```{r}
+
+# 숫자 처리 
+mytext3<-str_replace_all(mytext, "[[:digit:]]{1,}", "_number_")
+mytext3
+mytext3<-str_split(mytext3, " ")
+mytext3
+
+```
+
+
+```{r}
+
+# 구분 될 필요가 있는 특수문자 
+mytext<-"Baek et al. (2014) argued that the state of default-setting is critical for people to protect their own personal privacy on the Internet." # Baek et al = Baek 외에 여러명
+
+#str_split(mytext, "\\.")
+
+# "성씨 다음 et al.이 오고, 이어서(년도)형식
+# => "_reference_"로 일괄 치환
+# 하이픈 기호 
+
+# 1. 하이픈
+mytext2<-str_replace_all(mytext, "-", " ")
+mytext2<-str_replace_all(mytext2,"[[:upper:]]{1}[[:alpha:]]{1,}[[:space:]]{1}(et al\\.)[[:space:]]{1}\\([[:digit:]]{4}\\)","_reference_")
+mytext2
+
+# 2. . 공백 제거
+mytext2<-str_replace_all(mytext2,"\\.[[:space:]]{0,}","")
+mytext2
+
+# 3. 불용어 직접 등록, 제거
+mystopwords<- "(\\ba )|(\\ban )|(\\bthe )"
+
+mytext<-c("she is an actor", "She is the actor")
+str_replace_all(mytext, mystopwords,"")
+
+# 4. 
+  
+
+
+```
+
+
+#### 정의되어있는 불용어 리스트
+```{r}
+# stopwords("en") # 짧은 불용어
+# stopwords("SMART") # 긴 불용어
+
+# 어근 동일화 처리
+# 시제 고려 -> 동일화
+# ~s ~es -> 동일화
+
+
+
+```
+
+```{r}
+mystemmer.func<-function(mytext){
+  mytext<-str_replace_all(mytext, "(\\bam )|(\\bare )|(\\bas )|(\\bwas )|(\\bwere )|(\\bbe)", "be ")
+print(mytext)
+}
+
+test<-c("i am a boy. You are a boy. He mitght be a boy")
+
+mystemmer.func(test)
+
+
+```
+
+
+#### 
+```{r}
+# n-gram : 1-gram(의미없음)
+#          2-gram(bi-gram), 3-gram(tri-gram)
+# n번 연이어 등장하는 단어들의 연결
+# 등장배경 : 문장에 대해 이해하기 위해서
+# 단어 분리시 문장에 대한 의미가 어려워진다.
+# n gram + bayes => 문맥파악
+
+"The United States comprises fifty states. In the United States, each state has its own laws. However, federal law overrides state law in the United States." -> mytext
+
+# extract로 split보다 깔끔하게 분리 가능하다. 
+str_extract_all(mytext, boundary(type="word"))
+str_extract_all(mytext, boundary(type="word")) -> myword
+
+# 등장한 단어의 빈도수
+table(myword)
+
+# 모든 단어의 갯수
+sum(table(myword))
+
+# 서로 다른 단어의 개수
+length(table(myword))
+
+# 위처럼 나누면 united의 states와 동사 states 구분이 안된다.
+# 따라서 고유명사는 전처리 할 필요가 있다.
+
+str_replace_all(mytext, "\\bUnited States", "United_States")
+str_replace_all(mytext, "\\bUnited States", "United_States")->mytext.2gram
+str_extract_all(mytext.2gram, boundary(type="word"))
+
+
+```
+
+#### Corpus 구성 
+```{r}
+# library(tm)
+my.text.location<-"C:/rwork/Data/papers/papers/"
+my.text.location
+
+# tm(text mining) 패키지 이용
+
+# txt파일을 모두 합쳐서 Corpus로 만든다.
+VCorpus(DirSource(my.text.location))
+VCorpus(DirSource(my.text.location))->mypaper
+
+# Corpus 정보 확인
+class(mypaper)
+summary(mypaper)
+
+
+
+```
+
+
+
+
+
+
