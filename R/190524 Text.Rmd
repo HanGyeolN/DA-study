@@ -19,19 +19,11 @@ mytext
 mt<-str_split(mytext," ")
 mt
 
-# sapply(입력: 리스트, 출력: 벡터)
-# lapply(I: list, O: list)
-lapply(mt, str_length)
-sapply(mt, str_length)
-
-
 ```
 
 ```{r}
-# "hi         hello" -> "hi hello"
+# " ", "  ", "\t" -> " "
 str_replace_all(mytext,"[[:space:]]{1,}", " ")->mt2
-
- 
 
 sapply(mt2, length)
 sapply(mt2, str_length)
@@ -173,7 +165,9 @@ str_extract_all(mytext.2gram, boundary(type="word"))
 
 ```
 
-#### Corpus 구성 
+#### Corpus 처리
+* Corpus 읽기
+  text 파일들을 읽어온다 
 ```{r}
 # library(tm)
 my.text.location<-"C:/rwork/Data/papers/papers/"
@@ -184,19 +178,60 @@ my.text.location
 # txt파일을 모두 합쳐서 Corpus로 만든다.
 VCorpus(DirSource(my.text.location))
 VCorpus(DirSource(my.text.location))->mypaper
+class(unlist(mypaper))
 
-# Corpus 정보 확인
+```
+
+* Corpus 정보 확인
+```{r}
 class(mypaper)
 summary(mypaper)
+```
 
-mypaper[[1]]$meta
 
+* 한개의 txt문서에 대한 정보 확인
+```{r}
 mypaper[[2]]$meta
+```
 
+* 메타데이터에 새로운 값 입력
+```{r}
+meta(mypaper[[2]], tag='author')<-"G. D. Hong"
+mypaper[[2]]$meta
+```
+
+* 분석을 위해 리스트를 풀어주기
+```{r}
+unlist(mypaper)->mypaper
+```
+
+
+* 단어+특수문자+단어 조합을 가진 것 추출
+```{r}
+myfunc<-function(x){
+  str_extract_all(x,"[[:alnum:]]{1,}[[:punct:]]{1,}[[:alnum:]]{1,}")
+  # alnum : letters, numbers // punct : .!?,;
+  # str_extract_all(데이터, 추출할 문자열이나 정규표현식) 
+}
+
+lapply(mypaper, myfunc) -> mypuncts
+
+unlist(mypuncts)
 
 ```
 
 
+* 수치로된 자료를 추출
+```{r}
+myfunc2<-function(x){
+  str_extract_all(x,"[[:digit:]]{1,}")
+}
+
+lapply(mypaper, myfunc2) -> mydigits
+
+table(unlist(mydigits))
+
+```
 
 
 
