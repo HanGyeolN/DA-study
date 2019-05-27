@@ -1,0 +1,378 @@
+---
+title: "190527_Text"
+output: rmarkdown::github_document
+---
+
+#### 
+
+```{r library}
+library(KoNLP) # 가장먼지 임포트 해야 에러가 없다. 
+library(rJava)
+library(stringr)
+library(RWeka)
+library(tm)
+library(dplyr)
+```
+
+## n-gram 추출
+
+#### 1-1 Corpus 만들기
+
+```{r}
+
+
+mytext<-c("The United States comprises fifty states.", 
+          "In the United States, each state has its own laws.", 
+          "However, federal law overrides state law in the United States.")
+
+mytext
+
+mytemp<-VCorpus(VectorSource(mytext)) 
+#VCorpus(DirSource("경로")) # 폴더에 있는거 읽어오는 경우
+mytemp
+
+```
+
+* 17*3 = 51개
+* Non- : 값이 0이 아닌것
+* sparse : 값이 0인것
+```{r}
+mycorpus
+
+extractNoun(mycorpus[[1]]$content)
+
+bigramTokenizer<-function(x) NGramTokenizer(x, Weka_control(min=2, max=2))
+
+a<-TermDocumentMatrix(mycorpus, control=list(tokenize=bigramTokenizer))
+
+b<-extractNoun(a)
+
+
+a$dimnames$Terms
+
+
+
+```
+
+
+#### 1-2 단어를 n개씩으로 묶는다.
+```{r}
+bigramTokenizer<-function(x) NGramTokenizer(x, Weka_control(min=2,max=3))
+# 토큰이 2개 또는 3개로 나눠지는 n-gram을 생성한다.
+
+
+ngram.tdm<-TermDocumentMatrix(mytemp,
+                              control=list(tokenize=bigramTokenizer))
+#bigram Tokenizer로 토큰화한다. -> 최소2개 최대3개로 나누겠다. 
+
+ngram.tdm
+
+ngram.tdm$dimnames$Terms
+
+```
+2개 3개씩 묶어서 토큰화 할 수도 있다. 
+
+
+#### 전체문서에서 해당 단어가 몇번 등장했는지 알고싶다. 
+
+```{r}
+# 행 단위(2번째 요소 1)로 sum을 하면 전체문서에서 단어의 개수가 나온다.
+bigramlist<-apply(ngram.tdm[,], 1, sum) 
+sort(bigramlist,decreasing = TRUE)
+
+```
+
+#### 한국어 처리
+```{r}
+# library(KoNLP) 
+# library(rJava)
+# library(stringr)
+
+mytextlocation<-"C:/rwork/Data/papers/논문"
+mypaper<-VCorpus(DirSource(mytextlocation))
+mypaper[[19]]$content 
+mypaper[[19]]$content -> mykorean
+```
+1. 영어제거
+2. 특수문자 제거
+
+label: 11
+```{r 1}
+
+
+str_replace_all(mykorean, "[a-z]", "")
+str_replace_all(mykorean, "[a-z]", "") -> mytext
+
+str_replace_all(mytext, "\\(", "") -> mytext
+str_replace_all(mytext, "\\)", "") -> mytext
+str_replace_all(mytext, "·", "") -> mytext
+str_replace_all(mytext, "‘", "") -> mytext
+str_replace_all(mytext, "’", "") -> mytext
+str_replace_all(mytext, ",", "") -> mytext
+str_replace_all(mytext, "\\.", "") -> mytext
+
+mytext
+
+str_replace_all(mytext, "[[:punct:]]", "") -> mytext
+
+mytext
+
+extractNoun(mytext) -> noun.mytext
+
+
+```
+
+
+### corpus 모든 문서에서 전처리하기 
+```{r}
+mypaper
+# 각문서에서 숫자를 추출
+lapply(mypaper, function(x) (str_extract_all(x, "[[:digit:]]{1,}"))) -> mydigits
+table(unlist(mydigits))
+
+# 각문서에서 숫자 없애기
+tm_map(mypaper, removeNumbers) -> mycorpus
+mycorpus$content
+
+# 각 문서에서 조건에 맞는 Term 추출 
+lapply(mypaper, function(x)(str_extract_all(x,"\\b[[:alpha:]]{1,}[[:punct:]]{1,}[[:alpha:]]{1,}\\b")))->mypuncts
+table(unlist(mypuncts))
+
+# 각 문서에서 extract all
+mytempfunct<-function(myobject, oldexp, newexp) {
+  tm_map(myobject, content_transformer(function(x, pattern) gsub(pattern, newexp, x)), oldexp)
+}
+
+
+
+mycorpus<-mytempfunct(mycorpus, "[[:lower:]]{1,}", "")
+mycorpus
+
+
+mycorpus[[1]]
+length(mycorpus)
+#str_replace_all(mycorpus[[i]]$content, "[[:lower:]]{1,}", "")
+
+for (i in (1:length(mycorpus))){
+  mycorpus[[i]]$content <- str_replace_all(mycorpus[[i]]$content, "[A-Za-z]", "")
+  str_replace_all(mycorpus[[i]]$content, "\\(", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, "\\)", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, "·", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, "‘", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, "’", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, ",", "") -> mycorpus[[i]]$content
+  str_replace_all(mycorpus[[i]]$content, "\\.", "") -> mycorpus[[i]]$content
+}
+
+mycorpus[[6]]$content
+
+myNounFun<-function(mytext){
+  myNounList<-paste(extractNoun(mytext), collapse = " ")
+  return(myNounList)
+}
+
+print(myNounFun(mycorpus[[3]]$content)->myNounList)
+
+mycorpus[[3]]$content
+
+```
+
+### corpus에서 명사 추출하기
+
+```{r}
+
+length(mycorpus)
+
+myNounCorpus<-mycorpus
+
+# corpus에 있는 문서 개수만큼 반복하며 새로운 변수에 명사 저장
+for(i in 1:length(mycorpus)){
+  myNounCorpus[[i]]$content<-
+    myNounFun(mycorpus[[i]]$content)
+}
+myNounCorpus[[19]]$content
+
+# 모든 문서의 명사 빈도수
+#table(unlist(lapply(myNounCorpus, function(x) str_extract_all(x,boundary("word")))))
+
+imsi<-myNounCorpus
+
+# 모든 문서에서 특정 문자열 replace 하기
+for(i in 1:length(myNounCorpus)){
+  myNounCorpus[[i]]$content<-str_replace_all(imsi[[i]]$content, "커뮤니[[:alpha:]]{1,}", "커뮤니케이션")
+}
+
+# DTM 만들기
+print(DocumentTermMatrix(myNounCorpus)->dtm.k)
+
+#colnames(dtm.k)
+
+# 위키리크스를 -> 위키리크스
+
+for(i in 1:length(myNounCorpus)){
+  imsi[[i]]$content<-str_replace_all(imsi[[i]]$content, "(위키리크스)[[:alpha:]]{1,}", "위키리크스")
+}
+
+#colnames(DocumentTermMatrix(imsi))
+
+```
+
+### 기술통계분석
+```{r}
+
+#빈도수 합계
+apply(dtm.k[,],2,sum)->word.freq
+
+head(word.freq)
+length(word.freq)
+
+# 내림차순 정렬
+sort(word.freq, decreasing = T) -> sort.word.freq
+sort.word.freq[1:20]
+
+# 누계 합 -> 상위 20개까지의 단어등장 횟수
+cumsum.word.freq<-cumsum(sort.word.freq)
+cumsum.word.freq[1:20]
+
+# 각 단어 등장횟수 / 총 단어 등장횟수
+prop.word.freq<-cumsum.word.freq/cumsum.word.freq[length(cumsum.word.freq)]
+prop.word.freq
+
+plot(1:length(word.freq),prop.word.freq)
+
+# wordcloud
+library(wordcloud)
+library(RColorBrewer)
+mypal = brewer.pal(8, "Dark2")
+word.freq
+
+wordcloud(names(word.freq),
+          freq = word.freq,
+          min.freq = 10
+          ,col=mypal, 
+          random.order = F, 
+          scale=c(4,0,2))
+
+```
+
+
+
+## K-means Clustering
+
+비지도학습의 대표적인것이 K-means
+
+
+### SNS dataset, NA 처리 
+```{r}
+teens_origin<-read.csv("C:/rwork/Data/sns.csv")
+teens<-teens_origin
+
+#나이 처리
+teens$age<-ifelse(teens$age >= 13 & teens$age <20, teens$age, NA)
+teens$age<-round(teens$age)
+
+
+#str(teens)
+#colnames(teens)
+#View(teens)
+
+
+# table(teens[["gender"]])
+#$female<-ifelse(teens$gender=="F" ,1,0)
+teens$female<-ifelse(teens$gender=="F" & !is.na(teens$gender),1,0)
+teens$nogender<-ifelse(is.na(teens$gender),1,0)
+
+# table에 NA 포함
+table(teens$female,useNA = "always")
+table(teens$gender,useNA = "always")
+
+
+# for (coln in colnames(teens)){
+#   print(coln)
+#   print(table(teens[[coln]]))
+# }
+
+table(teens$gender, useNA = "ifany")
+
+
+#library(dplyr)
+mean(teens$age, na.rm=T)
+
+
+table(teens$gradyear)
+class(teens[])
+
+aggregate(data=teens, age~gradyear, mean) # <타겟>  ~ (그룹화기준)
+# data를 꼭 써줘야함 
+
+# 평균구하기
+ave(teens$age, teens$gradyear, FUN=function(x) mean(x,na.rm=TRUE)) -> ave_age
+
+teens$age<-ifelse(is.na(teens$age),ave_age,teens$age)
+
+summary(teens$age)
+
+
+```
+
+## K-mean
+
+### 1.표준화
+```{r}
+interests<-teens[5:40]
+
+
+# 빈도수를 따질것인가 말것인가?
+# 값의 왜곡 -> 정규화 or 표준화
+
+#lapply(interests, scale) # 표준화 함수
+as.data.frame(lapply(interests, scale))->interests_z
+
+head(interests_z)
+
+# 
+```
+
+### 2.초기 점 세팅
+```{r}
+set.seed(2345)
+teen_clusters<-kmeans(interests_z, 5) # kmeans(data, 그룹의 갯수)
+str(teen_clusters)
+
+teen_clusters$size # 사이즈
+
+# 클러스터 분석
+teen_clusters$centers # 센터
+
+#각 클러스터에 대한 나이의평균을 출력
+teens$cluster<-teen_clusters$cluster
+teens %>% 
+  group_by(cluster) %>% 
+  summarise(meanAge=mean(age,na.rm=T))
+
+
+```
+
+
+```{r}
+mycorpus
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
