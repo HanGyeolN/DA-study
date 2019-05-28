@@ -1,12 +1,19 @@
 ---
-title: "감성분석"
+title: "Sentiment Analysis"
 output: rmarkdown::github_document
 ---
-
-인용횟수
-tidytext package
 ```{r}
+library(tm)
+library(stringr)
+library(dplyr)
+library(tidytext)
+library(tidyr)
+```
 
+## Exercise
+
+#### 1. Sentiment library
+```{r}
 AFINN<-data.frame(get_sentiments("afinn"))
 
 #hist(AFINN$score, xlim = c(-6,6), ylim = c(0,600), col="#30AADF", breaks=14)
@@ -19,4 +26,149 @@ table(emolex$sentiment)
 
 emolex$word[emolex$sentiment=="anger"]
 ```
+
+#### 2. Join Exercise
+```{r}
+#creating dataframe1
+pd=data.frame(Name=c("Senthil","Senthil","Sam","Sam"),
+              Month=c("Jan","Feb","Jan","Feb"),
+              BS = c(141.2,139.3,135.2,160.1),
+              BP = c(90,78,80,81))
+print(pd)
+#creating dataframe2
+pd_new=data.frame(Name=c("Senthil","Ramesh","Sam"),Department=c("PSE","Data Analytics","PSE"))
+print(pd_new) 
+```
+#### 2-1. left_join
+* 왼쪽을 base로 join한다 ()
+```{r}
+print(left_join(pd, pd_new, by="Name"))
+print(right_join(pd,pd_new, by="Name"))
+print(inner_join(pd,pd_new, by="Name"))
+```
+
+# Sentiment Analysis
+
+#### 1. Load Corpus 
+```{r}
+my.text.location <- "C:/rwork/Data/papers/papers/"
+mypaper <- VCorpus(DirSource(my.text.location))
+#inspect(mypaper)
+
+str(mypaper[[1]]) # structure 확인
+
+mypaper[[1]][1] == mypaper[[1]]$content
+```
+
+#### 2. Vectorize Corpus
+```{r}
+class(mypaper[[1]]$meta)
+#str_length((mypaper[[1]][1])) = 24
+
+mytxt<-rep(NA,24)
+mytxt
+
+for (i in 1:length(mypaper)){
+  mytxt[i]<-as.character(mypaper[[i]][1])
+}
+
+mytxt[24]
+```
+
+#### 3. Make tidytext
+```{r}
+
+my.df.text<-data_frame(paper.id = 1:length(mypaper), 
+                       doc = mytxt)
+
+```
+
+#### 4. Split Word
+[1, 본문]    [1, 단어]
+[2, 본문]    [1, 단어]
+[...    ] -> [...    ]
+[24,본문]    [24,단어]
+  [24x2]       [Nx2]
+```{r}
+my.df.text.word <-
+  my.df.text %>% 
+  unnest_tokens(word, doc) #doc을 word단위로
+
+```
+
+#### 5. Join Sentiments & Word
+```{r}
+print(class(my.df.text.word))
+print(class(get_sentiments("bing")))
+
+print(inner_join(my.df.text.word, get_sentiments("bing"), by="word"))
+
+```
+
+#### 6. Count Words & Make Pivot Table
+```{r}
+print(my.df.text.word %>% 
+        inner_join(get_sentiments("bing"), by="word") %>% 
+        count(word, paper.id, sentiment) %>% 
+        spread(sentiment, n, fill=0) ->
+        myresult.sa)
+
+```
+
+#### 7. Calculate Sentiment
+```{r}
+
+myresult.sa %>% 
+  group_by(paper.id) %>% 
+  summarise(pos.sum = sum(positive),
+            neg.sum = sum(negative),
+            pos.sent = pos.sum-neg.sum)
+
+```
+
+#### 8. extra 파생변수 만들기 
+```{r}
+
+# 1. list.files로 논문 제목 받아오기 
+print(myfilenames<-list.files(path=my.text.location, all.files = TRUE))
+paper.name<-myfilenames[3:26]
+
+# 2. 논문 제목에서 년도 추출하기 
+print(pub.year<-unlist(str_extract_all(paper.name,"[0-9]{1,}")))
+
+# 3. 논문 제목과 년도 Join하기
+paper.id<-1:24
+print(pub.tear.df<-data.frame(paper.id, paper.name, pub.year))
+
+# 4. 
+print(myresult.sa %>% 
+        inner_join(pub.tear.df, by="paper.id"))
+
+```
+베이지안
+RNN
+CNN
+GAN 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
