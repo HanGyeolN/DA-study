@@ -1,0 +1,250 @@
+---
+title: "R Notebook"
+output: rmarkdown::github_document
+---
+
+length는 list의 길이를 반환한다.
+
+seq(5,10)은 int vector를 반환하는데
+as.list(seq(5,10))은 list로 변환해준다
+
+list의 값을 참조할땐 대괄호 두개를 써야한다.
+
+```{r}
+library(dplyr)
+library(tidytext)
+library(tidyr)
+a<-list(1,2,3)
+e<-as.list(seq(5,10))
+
+e[[5]]<-99
+e
+
+
+```
+list에서 특정 자료를 삭제할땐 NULL을 집어 넣어주면 된다.
+```{r}
+c<-as.list(seq(1,3))
+c
+c[[1]]<-NULL
+c
+```
+
+subset을 이용해 특정 범위에 있는 자료를 가져 올 수 있다.
+
+```{r}
+d<-as.list(seq(20))
+d[10:15]
+
+a<-c(1,2,3)
+
+```
+
+```{r}
+a<-c(1,2,3)
+length(a)
+dim(a)
+```
+
+vector Indexing
+```{r}
+a[1:2]
+a[1]
+a[[1]]
+
+a<-rbind(1:4,6:9)
+a
+
+```
+8을 참조하여 출력
+```{r}
+a[]
+a[1,]
+a[,2]
+a[2,2:4]
+a[1:2,3:4]
+a[2,3]
+a[[2,3]]
+
+
+```
+
+특정요소 제거하기 
+```{r}
+a<-1:10
+a
+a[-5]
+a[-1]
+a
+b<-a[-7:-9]
+```
+
+TF를 이용한 참조방식 
+
+```{r}
+bl<-c(T,F,T,T)
+k<-1:4
+k[bl] 
+
+```
+
+
+
+변수 초기화시 유용한 함수
+```{r}
+k<-k*10
+k
+
+rep(NA,10)
+seq(0,100,length.out = 4)
+set.seed(1)
+# normal distribution
+rnorm(10) # 가우시안 정규분포를 따르는 난수 
+# 
+runif(10) # 구간을 나누어서 균등하게 분포/ 균등분포
+
+
+matrix(rnorm(10),c(2,5))
+
+
+
+
+```
+
+시간측정
+proc.time() : R에서 시간 측정할때 사용 (cpu가 걸리는 시간)
+
+```{r}
+x<-1:10000
+y<-10001:20000
+startTime<-proc.time()
+z<-rep(0,10000)
+for (i in 1:10000){
+  z[i]<-x[i]+y[i]
+}
+endTime<-proc.time()
+
+endTime-startTime
+
+
+```
+
+
+a==b 요소끼리비교
+all(a==b) 배열전체 비교
+
+```{r}
+a<-c(0,1,2,3)
+b<-c(4,2,1,0)
+a==b
+all(a==b)
+```
+
+natural function
+```{r}
+exp(a)
+log(a)
+```
+
+Broad casting
+```{r}
+x<-1:5
+y<-rep(1,length(x))
+x+y
+x+rep(2,5)
+x+2
+```
+
+which.max -> return index
+```{r}
+x<-50:59
+which.max(x)
+
+```
+
+
+```{r}
+x<-matrix(c(10,20,10,20),nrow=2)
+
+
+sum(x[1:2,1])
+set.seed(123)
+df<-data.frame(k1=c("x","x","y","y","x"),
+               k2=c("f","s","f","s","f"),
+               d1=rnorm(5),
+               d2=rnorm(5))
+```
+
+
+group_by - summarise 는 같이 쓰이는게 일반적.
+```{r}
+summarise(group_by(df, k1), myMean = mean(d1))
+summarise(group_by(df, k1,k2), myMean = mean(d1))
+
+
+```
+
+tidyr package : 데이터를 깔끔하게 정리하는 도구
+- spread() : pivot table
+```{r}
+
+group_by(df, k1, k2) %>% 
+  summarise(myMean = mean(d1)) ->
+  exData01
+
+exData01
+
+spread(exData01, k1, myMean)
+spread(exData01, k2, myMean)
+
+
+
+```
+
+
+join, merge
+
+merge : 두 프레임의 공통 key를 사용
+join : 
+
+```{r}
+df1<-data.frame(k=c('b','b','a','c','a','a','b'),
+                d1=0:6)
+df2<-data.frame(k=c('a','b','d'),
+                d2=0:2)
+df1
+df2
+
+# 공통 key값을 기준으로 병합
+merge(df1,df2) 
+# -> c,d는 공통값이 없어져서 사라짐
+
+merge(df1,df2, all=T)
+# -> 사라지지 않도록 옵션
+
+merge(df1,df2, all.x=T)
+# -> df1에 있는 모든 key를 나오게함 
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,22 @@
+---
+title: "감성분석"
+output: rmarkdown::github_document
+---
+
+인용횟수
+tidytext package
+```{r}
+
+AFINN<-data.frame(get_sentiments("afinn"))
+
+#hist(AFINN$score, xlim = c(-6,6), ylim = c(0,600), col="#30AADF", breaks=14)
+
+oplex<-data.frame(get_sentiments("bing"))
+table(oplex$sentiment)
+
+emolex<-data.frame(get_sentiments("nrc"))
+table(emolex$sentiment)
+
+emolex$word[emolex$sentiment=="anger"]
+```
+
