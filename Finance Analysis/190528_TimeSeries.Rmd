@@ -1,0 +1,66 @@
+---
+title: "Time Series"
+output: rmarkdown::github_document
+---
+
+## ts type
+
+
+```{r}
+install.packages("ggfortify")
+install.packages("forecast")
+
+library(ggfortify) #ggplot for timeseries data
+library(forecast)
+library(ggplot2)
+
+```
+
+## Plot TimeSeries
+* Multi-Plot
+```{r}
+autoplot(AirPassengers)
+
+CBE <- read.csv("C:/Rdata/tsDataSet/cbe.csv", header = T)
+class(CBE)
+
+Choc.ts<-ts(CBE[,1], start = 1958, frequency = 12)
+Beer.ts<-ts(CBE[,2], start = 1958, frequency = 12)
+Elec.ts<-ts(CBE[,3], start = 1958, frequency = 12)
+
+plot(cbind(Elec.ts, Beer.ts, Choc.ts), main = "multiplot")
+
+
+```
+
+## Trend & Seasonality
+### Trend-plot 
+
+```{r}
+
+AP<-AirPassengers
+
+AP.time <- time(AP) # X-axis = time
+Reg <- lm(AP~AP.time) #Linear Regression -> return 
+
+plot(AP)
+abline(Reg) # 자주 사용
+
+
+```
+
+### Seasonality
+Trend를 뺀 나머지 분포를 boxplot으로 본다.
+
+
+## Decomposition
+#### 1. Trend
+#### 2. Original - Trend = Seasonality
+#### 3. Original - Trend - Seasonality = Noise, Error, Other...
+```{r}
+
+decompose(AP)
+plot(decompose(AP))
+
+```
+
