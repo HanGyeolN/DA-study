@@ -1,0 +1,112 @@
+---
+title: "K-means Clustering"
+output: rmarkdown::github_document
+---
+
+#### 
+
+```{r library}
+library(KoNLP) # 가장먼지 임포트 해야 에러가 없다. 
+library(rJava)
+library(stringr)
+library(RWeka)
+library(tm)
+library(dplyr)
+```
+
+
+## K-means Clustering
+
+비지도학습의 대표적인것이 K-means
+
+
+### SNS dataset, NA 처리 
+```{r}
+teens_origin<-read.csv("C:/rwork/Data/sns.csv")
+teens<-teens_origin
+
+#나이 처리
+teens$age<-ifelse(teens$age >= 13 & teens$age <20, teens$age, NA)
+teens$age<-round(teens$age)
+
+
+#str(teens)
+#colnames(teens)
+#View(teens)
+
+
+# table(teens[["gender"]])
+#$female<-ifelse(teens$gender=="F" ,1,0)
+teens$female<-ifelse(teens$gender=="F" & !is.na(teens$gender),1,0)
+teens$nogender<-ifelse(is.na(teens$gender),1,0)
+
+# table에 NA 포함
+table(teens$female,useNA = "always")
+table(teens$gender,useNA = "always")
+
+
+# for (coln in colnames(teens)){
+#   print(coln)
+#   print(table(teens[[coln]]))
+# }
+
+table(teens$gender, useNA = "ifany")
+
+
+#library(dplyr)
+mean(teens$age, na.rm=T)
+
+
+table(teens$gradyear)
+class(teens[])
+
+aggregate(data=teens, age~gradyear, mean) # <타겟>  ~ (그룹화기준)
+# data를 꼭 써줘야함 
+
+# 평균구하기
+ave(teens$age, teens$gradyear, FUN=function(x) mean(x,na.rm=TRUE)) -> ave_age
+
+teens$age<-ifelse(is.na(teens$age),ave_age,teens$age)
+
+summary(teens$age)
+
+
+```
+
+## K-mean
+
+### 1.표준화
+```{r}
+interests<-teens[5:40]
+
+
+# 빈도수를 따질것인가 말것인가?
+# 값의 왜곡 -> 정규화 or 표준화
+
+#lapply(interests, scale) # 표준화 함수
+as.data.frame(lapply(interests, scale))->interests_z
+
+head(interests_z)
+
+# 
+```
+
+### 2.초기 점 세팅
+```{r}
+set.seed(2345)
+teen_clusters<-kmeans(interests_z, 5) # kmeans(data, 그룹의 갯수)
+str(teen_clusters)
+
+teen_clusters$size # 사이즈
+
+# 클러스터 분석
+teen_clusters$centers # 센터
+
+#각 클러스터에 대한 나이의평균을 출력
+teens$cluster<-teen_clusters$cluster
+teens %>% 
+  group_by(cluster) %>% 
+  summarise(meanAge=mean(age,na.rm=T))
+
+
+```

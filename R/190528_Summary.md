@@ -1,4 +1,4 @@
-R Notebook
+R 자주 사용하는 기능
 ================
 
 length는 list의 길이를 반환한다.
@@ -13,11 +13,11 @@ library(dplyr)
 
     ## 
     ## Attaching package: 'dplyr'
-
+    
     ## The following objects are masked from 'package:stats':
     ## 
     ##     filter, lag
-
+    
     ## The following objects are masked from 'package:base':
     ## 
     ##     intersect, setdiff, setequal, union
@@ -50,23 +50,10 @@ e
     ## [[6]]
     ## [1] 10
 
-list에서 특정 자료를 삭제할땐 NULL을 집어 넣어주면 된다.
 
+#### list에서 특정 자료를 삭제할땐 NULL을 집어 넣어주면 된다.
 ``` r
 c<-as.list(seq(1,3))
-c
-```
-
-    ## [[1]]
-    ## [1] 1
-    ## 
-    ## [[2]]
-    ## [1] 2
-    ## 
-    ## [[3]]
-    ## [1] 3
-
-``` r
 c[[1]]<-NULL
 c
 ```
@@ -119,7 +106,7 @@ dim(a)
 
     ## NULL
 
-vector Indexing
+#### vector Indexing
 
 ``` r
 a[1:2]
@@ -148,7 +135,7 @@ a
     ## [1,]    1    2    3    4
     ## [2,]    6    7    8    9
 
-8을 참조하여 출력
+#### 8을 참조하여 출력
 
 ``` r
 a[]
@@ -227,7 +214,7 @@ a
 b<-a[-7:-9]
 ```
 
-TF를 이용한 참조방식
+### TF를 이용한 참조방식
 
 ``` r
 bl<-c(T,F,T,T)
@@ -299,7 +286,7 @@ endTime-startTime
 ```
 
     ##    user  system elapsed 
-    ##    0.01    0.00    0.01
+    ##       0       0       0
 
 a==b 요소끼리비교 all(a==b) 배열전체 비교
 
@@ -404,7 +391,7 @@ summarise(group_by(df, k1,k2), myMean = mean(d1))
     ## 3 y     f      1.56  
     ## 4 y     s      0.0705
 
-tidyr package : 데이터를 깔끔하게 정리하는 도구 - spread() : pivot table
+### idyr package : 데이터를 깔끔하게 정리하는 도구 - spread() : pivot table
 
 ``` r
 group_by(df, k1, k2) %>% 
@@ -444,9 +431,11 @@ spread(exData01, k2, myMean)
     ## 1 x     -0.216 -0.230 
     ## 2 y      1.56   0.0705
 
-join, merge
+### join, merge
 
-merge : 두 프레임의 공통 key를 사용 join :
+merge : 두 프레임의 공통 key를 사용해서 합친다.
+
+join
 
 ``` r
 df1<-data.frame(k=c('b','b','a','c','a','a','b'),
