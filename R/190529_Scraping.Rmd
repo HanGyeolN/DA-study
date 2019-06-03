@@ -1,0 +1,183 @@
+---
+title: "Scraping with R"
+output: rmarkdown::github_document
+---
+
+## rvest package
+```{r}
+library(KoNLP)
+library(rvest)
+
+```
+
+## Select
+* read_nodes(,".~")클래스
+* read_nodes(,"#~")id
+* read_nodes(,"~")태그
+
+* read_attrs(,"~") name="~"
+```{r}
+url <- "https://movie.daum.net/moviedb/grade?movieId=111292&type=netizen&page=1"
+
+# extract pieces using xpath and css selectors
+
+
+# Get Html
+htxt<-read_html(url)
+str(htxt)
+
+
+# Select review
+# html_nodes(url, css Selector, )
+review<-html_nodes(htxt, ".desc_review")
+print(review<-html_text(review))
+
+# Select number of review
+n<-html_nodes(htxt, ".txt_menu")
+print(n<-html_text(n))
+```
+
+
+## Daum Movie Reviews
+```{r}
+url_default <- "https://movie.daum.net/moviedb/grade?movieId=111292&type=netizen&page="
+
+
+allReviews<-c()
+
+for(page in 1:40){
+  url<-paste(url_default,page,sep="")
+  htmlTxt<-read_html(url)
+  review<-html_nodes(htmlTxt, ".desc_review")
+  reviews<-html_text(review)
+  allReviews<-c(allReviews,reviews)
+}
+
+print(allReviews)
+```
+
+
+
+# Naver Movie Reviews
+```{r}
+url_default<-"https://movie.naver.com/movie/point/af/list.nhn?st=mcode&sword=161967&target=before&page="
+
+allReviews<-c()
+
+for(page in 1:40){
+  url<-paste(url_default,page,sep="")
+  htmlTxt<-read_html(url, encoding = "cp949")
+  # Error in doc_parse_raw(x, encoding = encoding, base_url = base_url, as_html = as_html, : input conversion failed due to input error
+  
+  
+  review<-html_nodes(htmlTxt,".list_netizen")
+  review<-html_nodes(review, ".title")
+  reviews<-html_text(review)
+  allReviews<-c(allReviews,reviews)
+  # print(review)
+}
+
+write.table(allReviews,"review2.txt")
+
+```
+
+
+
+
+## Namu Wiki
+```{r}
+url<-"https://namu.wiki/w/%EA%B8%B0%EC%83%9D%EC%B6%A9"
+htmlTxt<-read_html(url)
+
+content<-html_nodes(htmlTxt,".wiki-heading-content")
+content<-html_text(content)
+print(class(content))
+
+#html_nodes(htmlTxt,"a")
+#library(KoNLP)
+useSejongDic()
+#unlist(extractNoun(content))
+
+text<-sapply(content, extractNoun, USE.NAMES = F)
+text<-unlist(text)
+
+View(reviews.result3)
+```
+
+#### 2글자이상 추출
+```{r}
+
+#Filter(함수, 데이터)
+text<-Filter(function(x){nchar(x)>=2}, text)
+#print(text)
+```
+
+
+#### 
+```{r}
+#gsub(replace)
+text<-gsub("\\d+", "",text)
+class(data<-table(text))
+write.csv(data,"기생충.csv")
+```
+
+## Twitter Crawling
+1. https://developer.twitter.com/ 에서 key 발급
+2. 
+```{r}
+# library("twitteR") # 트위터 라이브러리
+# library("ROAuth") # 계정인증
+# library("base64enc") # 인코딩방식
+# 
+# # 트위터 계정 발급키 입력
+# consumerKey <- "Consumer Key (API Key)"
+# consumerSecret <- "Consumer Secret (API Key)"
+# accessToken <- "Access Token"
+# accessTokenSecret <- "Access Token Secret"
+# 
+# # oauth 인증 파일 저장
+# setup_twitter_oauth(consumerKey, consumerSecret, accessToken, accessTokenSecret)
+# # 콘솔 창에 1(yes) 선택
+# 
+# #키워드 저장
+# keyword <-enc2utf8("기생충") # 키워드로 검색 
+# 
+# # 크롤링할 트위터 수(n=1000)와 언어(lang="ko") 
+# data<- searchTwitter(keyword, n=1000, lang="ko")
+# 
+# length(data)
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
