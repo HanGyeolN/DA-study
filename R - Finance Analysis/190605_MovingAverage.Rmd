@@ -1,0 +1,45 @@
+---
+title: "Moving Average"
+output: rmarkdown::github_document
+---
+### 평균은 가중치를 의미한다.
+
+
+```{r}
+library(forecast)
+library(ggplot2)
+
+gs <- read.csv("C:/Users/user/Downloads/data/gs_ts.csv")
+
+```
+
+```{r}
+head(gs)
+```
+
+
+### frequency 
+- 주기는 임의로 준다. 주기가없으면 1
+- 평균 일주일에 5번 1년에 250일정도 된다.
+* (주의) TimeSeries를 만들때 dataframe의 한 column을 ts로 만들어야한다.
+
+
+```{r}
+gs_price <- ts(gs$price, frequency = 250)
+# frequency
+plot(gs_price, main = "Goldman Sachs Stock Price")
+
+```
+
+### Moving Average
+
+```{r}
+plot(gs_price, main = "Goldman Sachs Stock Price: 100dats MA")
+
+# rep(1/100, 100)은 1/100의 가중치를 의미한다.
+m1 <- filter(gs_price, rep(1/100, 100), sides=1)
+# 겹치게 그리기
+lines(m1,col = "red")
+
+
+```
