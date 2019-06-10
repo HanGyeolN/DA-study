@@ -1,33 +1,3 @@
-# IT상식
-
-
-
-### 
-
-### Virtual Machine
-
-- Fedora 22(MySQL 5.7)
-- WS2016(MariaDB 10.4 RC)
-- SQL Server 2019 CTP 
-
--> DB는 버전이 중요
-
-1. MariaDB 설치 - 계정 설정시 밑에 체크박스2개 (3306 port) - 무료(mysql) [서버 프로그램]
-
-2. HeidiSQL - 신규세션 - 연결 [클라이언트 프로그램]
-
-   ----
-
-   1. 호스트에서 클라이언트 mysql로 접속
-   2. 
-
-
-
-3. SQL 설치 - default instance
-
-
-
-```mysql
 # 파이썬을 위한 DB 기본 
 CREATE DATABASE samsongDB; #ctrl + F9
 
@@ -68,9 +38,4 @@ SELECT userName, userMail FROM userTable WHERE userID = 'BBB';
 
 # 범위로도 검색이 가능하다.
 SELECT userName, birthYear FROM userTable WHERE birthYear < 1990 ;
-
-
-```
-
-
 
