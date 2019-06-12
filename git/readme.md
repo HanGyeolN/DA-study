@@ -103,7 +103,7 @@
 
 
 
-1. 원격 저장소(remote repository) 등록하기
+1. ### 원격 저장소(remote repository) 등록하기
 
    ```bash
    $ git remote add origin ___경로___
@@ -113,21 +113,40 @@
 
    * 최초 한번만 등록하면 된다.
 
-   * 원격 저장소가 확인된다.
+   * ### 원격 저장소가 확인
 
      ```bash
      $ git remote -v
      origin  https://github.com/HanGyeolN/TIL.git (fetch)
      origin  https://github.com/HanGyeolN/TIL.git (push)
      ```
+     
+   * ### 원격 저장소 삭제하기
 
-2.  원격 저장소에 올리기(push)
+     ```bash
+     $ git remote rm origin
+     
+     $ git remote -v
+     < 깔끔 >
+     ```
+
+     
+
+2. 원격 저장소에 올리기(push)
 
    ```bash
    $ git push origin master
    ```
 
    * git ! 올려줘(push) `origin` 이라는 이름의 원격저장소에 master 로.
+
+3. 언격 저장소에서 내려받기 (pull)
+
+   ```bash
+   $ git pull origin master #해당 폴더 안에서
+   ```
+
+   
 
 
 
@@ -149,5 +168,6 @@ $ git clone ____경로____
 
 
 * clone / pull 차이 : pull은 꼬일 수 있어서 clone으로 하는게 제일 깔끔하다. 
-* 
+
+
 
