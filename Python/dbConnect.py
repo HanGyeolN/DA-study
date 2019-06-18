@@ -123,7 +123,6 @@ def uploadData() :
     con.close()
 
 import tempfile
-
 def downloadData() :
     con = pymysql.connect(host=IP_ADDR, user=USER_NAME, password=USER_PASS,
                           db=DB_NAME, charset=CHAR_SET)
@@ -139,6 +138,7 @@ def downloadData() :
     cur.close()
     con.close()
     print(sql)
+    
 ####################
 #### 메인 코드부 ####
 ####################
