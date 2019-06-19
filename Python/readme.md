@@ -1,4 +1,55 @@
-# Tip 코드
+# 파이썬
+
+- 19-06-03(월) ~ 19-06-28(금) : 3일(24h) / 5일(64h) / 5일(104h) / 5일(144h) 
+
+
+
+- 1주차
+
+  - 컴퓨터 하드웨어 이야기 - CPU RAM Disk
+  - OS : Unix - IBM AIX, HP UX ... / Linux - RHEL, CentOS, Ubuntu, Fedora, Oracle Unix
+  - Windows - 7, 10 / Server 2008, 2012, 2016, 2019 [PowerShell을 해도 되나? WindowPhone..]
+  - 가상머신 : Azure, VMware, VirtualBox [돈이 있으면 VMware 없으면 VirtualBox(무료)]
+  - 컴퓨터 이야기 (3)
+  - VM에 DB 설치 (4)
+    - 실무 환경 : [DB Server] < -보안- > [Web Server] < --- > [Client(Web)]
+  - 파이썬 DB 연동 (SQLite, MySQL) (5)
+
+- 2주차
+
+  - 
+
+  - VM 설치: Windows 2016, 2019, Linux
+
+  - DB 설치: DBMS (OracleDB 10g, 11gR1/R2, 12cR1/R2 - 실무버전 (대규모)  => DB 업그레이드가 큰 이슈.  
+
+    ​                             SQL Server 2008, 2008R2, 2012, 2014, 2016, 2017, 2019 (중 ~ 대규모)
+
+    ​                             MySQL 5.6, 5.7, 8.0 (중소규모, oracle에서 인수)
+
+    ​                             MariaDB 10.1, 10.2, 10.3, 10.4(RC) --> 오픈소스
+
+  - 파이썬 주요 문법(10)
+
+  - 파이썬 GUI + 영상 입출력(파일) (11)
+
+  - 파이썬 GUI + 영상 입출력(파일) + 영상처리(CV) (12)
+
+  - 파이썬 GUI + 영상 입출력(파일) + 영상처리(CV) (13)
+
+  - 파이썬 GUI + 영상 입출력(파일) + 영상처리(CV) + DB 입출력(Blob) (14)
+
+- 3주차
+  - 파이썬 GUI + 영상 입출력(파일) + 영상처리(CV) + DB 입출력(ByteData) + CSV 입출력(TextData) (17)
+  - 파이썬 GUI + 영상 입출력(파일) + 영상처리(CV) + DB 입출력 + CSV 입출력 + 성능개선(Numpy) (18)
+  - 리뷰 (19)
+- 4주차
+  - 머신러닝/딥러닝 기반의 이미지 데이터 시각화/ 분석(Scikit Learn)
+  - HarrCascade
+
+
+
+
 
 
 
@@ -24,8 +75,6 @@ ord() : 문자 -> 아스키코드(정수)
 
 
 ```
-
-
 
 
 
