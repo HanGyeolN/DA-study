@@ -1,6 +1,6 @@
 import pymysql
 
-# DB 정보 
+# DB 정보
 DB_IP = "192.168.56.112"
 DB_ID = "root"
 DB_PW = "1234"
