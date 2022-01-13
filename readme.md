@@ -1,5 +1,8 @@
+<!-- ABOUT THE PROJECT -->
+# About Course
+
 ## Projects
-[진행했던 프로젝트](https://github.com/HanGyeolN/DA-study/tree/master/nlps)
+[프로젝트](https://github.com/HanGyeolN/DA-study/tree/master/nlps)
 - 영화 리뷰 감성분석
 - 제품 리뷰 분석
 
