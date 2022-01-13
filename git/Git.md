@@ -139,15 +139,3 @@ $ git clone ____경로____
 
 * 다운 받기를 원하는 폴더에서 `git bash`를 열고 위의 명령어를 입력한다.
 * 경로는 `github`에서 우측에 있는 초록색 버튼을 누르면 나타난다.
-
-
-
-나갈 때 git push origin master 했냐?
-
-올 때 git pull origin master 했냐?
-
-
-
-* clone / pull 차이 : pull은 꼬일 수 있어서 clone으로 하는게 제일 깔끔하다. 
-* 
-
