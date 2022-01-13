@@ -1,10 +1,10 @@
 ## Projects
-[진행했던 프로젝트](https://github.com/HanGyeolN/DA-study/tree/master/NLP)
+[진행했던 프로젝트](https://github.com/HanGyeolN/DA-study/tree/master/nlps)
 - 영화 리뷰 감성분석
 - 제품 리뷰 분석
 
 ## NLP
-[자연어 처리](https://github.com/HanGyeolN/NLP/tree/master/R)
+[자연어 처리](https://github.com/HanGyeolN/DA-study/tree/master/R)
 - N-gram
 - K-Means-Clustering
 - Sentiment Analysis
