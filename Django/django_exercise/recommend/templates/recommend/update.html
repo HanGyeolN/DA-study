@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">영화 정보 수정</h1>
+    <form action="{% url 'recommend:update' movie.pk %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="title">title</label>
+            <input type="text" value="{{movie.title}}" name="title" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="title_en">title_en</label>
+            <input type="text" value="{{movie.title_en}}" name="title_en" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="audience">audience</label>
+            <input type="number" value="{{movie.audience}}" name="audience" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="open_date">open_date</label>
+            <input type="date" name="open_date" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="genre">genre</label>
+            <input type="text" value="{{movie.genre}}" name="genre" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="watch_grade">watch_grade</label>
+            <input type="text" value="{{movie.watch_grade}}" name="watch_grade" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="score">score</label>
+            <input type="number" value={{movie.score}} name="score" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="poster_url">poster_url</label>
+            <input type="text" value="{{movie.poster_url}}" name="poster_url" step="0.01" class="form-control" id="title">
+        </div>
+
+        <div class="form-group">
+            <label for="description">description</label>
+            <input type="text" value="{{movie.description}}" name="description" class="form-control" id="title">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+{% endblock %}

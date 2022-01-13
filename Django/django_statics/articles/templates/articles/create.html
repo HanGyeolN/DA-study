@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<!-- action을 비워두면 자기한테 다시 돌아온다. -->
+<!-- image 입력시 form의 enctype 속성 추가 -->
+    <form action="{% url 'articles:create' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="text" name="title">
+        <input type="text" name="content">
+        <input type="file" name="image">
+        <input type="submit">
+    </form>
+{% endblock %}

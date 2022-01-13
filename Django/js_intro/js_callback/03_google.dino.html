@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- 2. 1번(class="bg")을 꾸며주는 style 추가-->
+    <style>
+        .bg {
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. img div 추가 -->
+    <div class="bg">
+        <img
+            id="dino"
+            width="100px"
+            height="100px" 
+            src="https://art.pixilart.com/d8a5d6f1f1f432a.png" 
+            alt="google-dino">
+    </div>
+    <div class="bg">
+            <img
+            id="dino2"
+            width="100px"
+            height="100px" 
+            src="https://art.pixilart.com/d8a5d6f1f1f432a.png" 
+            alt="google-dino">
+    </div>
+    
+    <!-- 3. dom을 조작하는 스크립트 추가 -->
+    <script>
+
+        // querySelector는 여러개의 bg들중 가장 첫번재 하나만 가져온다
+        // bg class의 자식까지 가져온다.
+        const bg = document.querySelector('.bg')
+        // const bg = document.querySelectorAll('.bg')
+        console.log(bg)
+
+        const dino = bg.querySelector('#dino')
+        let x = 0
+        let y = 0
+
+        dino.addEventListener('click', function(event) {
+            console.log('아야!')
+        })
+
+        // dino는 keydown을 감지할수 없어서 document로 변경
+        // document.addEventListener('keydown', function(event) {
+        //     console.log('아야!')
+        // })
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key == ' ') {
+                console.log('space bar')
+            } else if (e.key == "ArrowLeft"){
+                console.log('left')
+                x -= 20
+                dino.style.marginLeft = `${x}px`
+            } else if (e.key == "ArrowUp") {
+                console.log('up')
+                y -= 20
+                dino.style.marginTop = `${y}px`                
+            } else if (e.key == "ArrowDown") {
+                console.log('down')
+                y -= 20
+                dino.style.marginBottom = `${y}px`
+            } else if (e.key == "ArrowRight") {
+                console.log('right')
+                x += 20
+                dino.style.marginLeft = `${x}px`
+            } else {
+                console.log('잘못된 키')
+            }
+        })
+
+
+    </script>
+</body>
+</html>

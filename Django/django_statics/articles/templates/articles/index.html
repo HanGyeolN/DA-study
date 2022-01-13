@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+    <h1>Articles</h1>
+    {% for article in articles %}
+        <a href="{% url 'articles:detail' article.pk %}">{{article.title}}</a>
+        <p>내용 : {{article.content}}</p>
+        {% if article.image %}
+            <img src="{{article.image.url}}" alt="" width=400>
+        {% endif %}
+        <hr>
+    {% endfor %}
+
+{% endblock %}

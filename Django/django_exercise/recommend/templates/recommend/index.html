@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Movies</h1>
+    <a href="create/">[새 영화 등록]</a>
+    <hr>
+    {% for movie in movies %}
+    <div class="movie-{{movie.pk}}">
+        <a href="{% url 'recommend:detail' movie.pk %}">{{movie.title}}</a>
+        <p>평점: {{movie.score}}</p>
+        <hr>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

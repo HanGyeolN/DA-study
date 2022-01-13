@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="text-center">DETAIL</h1>
+    <h2>{{ article.pk }}번째 글</h2>
+    <hr>
+    <p>제목: {{ article.title }}</p>
+    <p>내용: {{ article.content }}</p>
+    <p>작성 시각: {{ article.created_at|date:"SHORT_DATE_FORMAT" }}</p>
+    <p>수정 시각: {{ article.updated_at|date:"M, j, Y" }}</p>
+    
+    <hr>
+    {{ comments|length }}개의 댓글
+    <!-- {{ article.comments.all|length }} -->
+    {% for comment in comments %}
+        <p>댓글 {{comment.pk}}: {{comment.content}}</p>
+        <form action="{% url 'articles:comments_delete' article.pk comment.pk %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="삭제">
+        </form>
+        {% empty %}
+        <p><strong>댓글이 없습니다.</strong></p>
+    {% endfor %}
+    
+    <hr>
+
+    <form action="{% url 'articles:comment_create' article.pk %}" method="POST">
+        {% csrf_token %}
+        <label for="comment">Comment </label><br>
+        <input type="text" name="content"><br>
+        <input type="submit" >
+    </form>
+
+    <hr>
+
+    <a href="{% url 'articles:update' article.pk %}">[UPDATE]</a>
+    <!-- <a href="{% url 'articles:delete' article.pk %}" onclick="return confirm('삭제하시겠어요?')">[DELETE]</a> -->
+    <form action="{% url 'articles:delete' article.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="[DELETE]">
+    </form>
+    <a href="{% url 'articles:index' %}">[BACK]</a>
+
+    
+{% endblock %}

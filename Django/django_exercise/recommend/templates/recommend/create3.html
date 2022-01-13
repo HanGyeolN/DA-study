@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">새 영화 등록</h1>
+    <form action="../create/" method="POST">
+        {% csrf_token %}
+        <label for="">영화 제목</label>
+        <input type="text" name="title"><br>
+        
+        <label for="">영어 제목</label>
+        <input type="text" name="title_en"><br>
+
+        <label for="">관객 수</label>
+        <input type="number" name="audience"><br>
+
+        <label for="">개봉일</label>
+        <input type="date" name="open_date"><br>
+
+        <label for="">장르</label>
+        <input type="text" name="genre"><br>
+
+        <label for="">시청 등급</label>
+        <input type="text" name="watch_grade"><br>
+        
+        <label for="">평점</label>
+        <input type="number" name="score"><br>
+
+        <label for="">포스터 주소</label>
+        <input type="text" name="poster_url"><br>
+
+        <label for="">설명</label>
+        <textarea name="description" id="" cols="30" rows="10"></textarea><br>
+        
+        <input type="submit" value="submit" >
+    </form>
+</div>
+{% endblock %}
